@@ -25,57 +25,55 @@ namespace KeyValue
         {
             KeyValue[] kvs = new KeyValue[16];
             int storedValues = 0;
-        }
 
-        public object this[string key]
-        {
-            set
+            public object this[string searchKey]
             {
-                bool found = false;
-                for (int i = 0; i < storedValues & !found; ++i)
+                set
                 {
-                    if (kvs[i].key == searchKey)
+                    bool found = false;
+                    for (int i = 0; i < storedValues & !found; ++i)
                     {
-                        return kvs[i].value;
+                        if (kvs[i].key == searchKey)
+                        {
+                            kvs[i] = new KeyValue(searchKey, value);
+                            found = true;
+                        }
+                    }
+                    if (!found)
+                    {
+                        kvs[storedValues++] = new KeyValue(searchKey, value);
                     }
                 }
-                if (!found)
-                {
-                    kvs[storedValues++] = new KeyValue(key, value);
-                }
-            }
 
-            get
-            {
-                bool found = false;
-                for (int i = 0; i < storedValues; ++i)
+                get
                 {
-                    if (kvs[i].key == searchKey)
+                    for (int i = 0; i < storedValues; ++i)
                     {
-                        return kvs[i].value;
+                        if (kvs[i].key == searchKey)
+                        {
+                            return kvs[i].value;
+                        }
                     }
-                    throw new KeyNotFoundException($"Didn't find\"{searchKey}\" in MyDictionary");
+                        throw new KeyNotFoundException($"Didn't find\"{searchKey}\" in MyDictionary");
                 }
-        }
-
-    
-
-
-    static void Main(string[] args)
-    {
-            var d = new MyDictionary();
-            try
-            {
-                Console.WriteLine(d["Cats"]);
             }
-            catch (Exception ex)
+
+
+            static void Main(string[] args)
             {
-                Console.WriteLine(ex);
+                var d = new MyDictionary();
+                try
+                {
+                    Console.WriteLine(d["Cats"]);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                d["Cats"] = 42;
+                d["Dogs"] = 17;
+                Console.WriteLine($"{(int)d["Cats"]}, {(int)d["Dogs"]}");
             }
-            d["Cats"] = 42;
-            d["Dogs"] = 17;
-            Console.WriteLine($"{(int)d["Cats"]}, {(int)d["Dogs"]}");
         }
     }
-}
 }
